@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 async function connect(){
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/my_education_dev', {
+        await mongoose.connect('mongodb+srv://2php2692004:<conchimlahet>@du-an-dau-tay.3zmkc.mongodb.net/?retryWrites=true&w=majority&appName=du-an-dau-tay', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
