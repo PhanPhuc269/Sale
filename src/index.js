@@ -13,7 +13,7 @@ const db = require('./config/db');
 db.connect();
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 const route = require('./routes');  
 
@@ -36,7 +36,7 @@ app.engine('hbs', handlebars.engine({
 }));
 app.set('view engine', 'hbs');
 
-app.set('views', path.join(__dirname, 'resources\\views'));
+app.set('views', path.join(__dirname, 'resources/views'));
 
 route(app);
 app.listen(port, () => {
