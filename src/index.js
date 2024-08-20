@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const path = require('path');
@@ -5,6 +6,9 @@ const handlebars = require('express-handlebars');
 const methodOverride = require('method-override');
 const sortMidleware= require('./app/middlewares/sortMiddleware');
 
+
+
+//nodemon --inspect src/index.js
 const db = require('./config/db');
 db.connect();
 
