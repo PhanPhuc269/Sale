@@ -13,7 +13,7 @@ const db = require('./config/db');
 db.connect();
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 const route = require('./routes');  
 
@@ -40,5 +40,5 @@ app.set('views', path.join(__dirname, 'resources\\views'));
 
 route(app);
 app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+  console.log(`App listening at http://13.228.225.19:${port}`);
 });
