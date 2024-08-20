@@ -14,7 +14,7 @@ class SitesController{
         // }
         Course.find({})
         .then(courses => res.render('home',{courses: mutipleMongooseToObject(courses)}))
-        .catch(console=> next(error));
+        .catch(next);
         
     }
     search(req,res){
