@@ -18,6 +18,12 @@ const port = process.env.PORT || 3000;
 const route = require('./routes');  
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  if (req.url.endsWith('.css')) {
+    res.setHeader('Content-Type', 'text/css');
+  }
+  next();
+});
 app.use(express.urlencoded({
   extended: true
 }));
