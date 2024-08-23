@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-//'mongodb+srv://2php2692004:conchimlahet@du-an-dau-tay.3zmkc.mongodb.net/?retryWrites=true&w=majority&appName=du-an-dau-tay/my-education-dev'
+//mongodb://localhost:27017/my-education-dev
 async function connect() {
     try {
-        await mongoose.connect('mongodb://localhost:27017/my-education-dev', {
+        await mongoose.connect('mongodb+srv://2php2692004:conchimlahet@du-an-dau-tay.3zmkc.mongodb.net/?retryWrites=true&w=majority&appName=du-an-dau-tay/my-education-dev', {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             serverSelectionTimeoutMS: 10000
