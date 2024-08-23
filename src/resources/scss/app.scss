@@ -1,6 +1,6 @@
 @import "variables";
-h1{
-    color: $red-color;
+.welcome{
+    color: $gt-color;
 }
 .user-avatar{
     width: 28px;
@@ -11,4 +11,32 @@ h1{
 .select-all-options{
     width: 160px;
     margin: 0 16px;
+}
+.card-img-container {
+    width: 100%;
+    height: 200px;
+    /* Chiều cao cố định cho ảnh */
+    overflow: hidden;
+    /* Ẩn phần ảnh vượt ra ngoài khung */
+}
+
+.card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Đảm bảo ảnh bao phủ toàn bộ khung mà không bị biến dạng */
+}
+body{
+    background-image:url(/img/background.jpg);
+    background-size: cover;
+}
+.container {
+    min-height: 300px;
+}
+.welcome{
+    height: 300px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
 }

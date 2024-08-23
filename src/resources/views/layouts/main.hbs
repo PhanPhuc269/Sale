@@ -15,7 +15,11 @@
     </head>
     <body>
         <div class="app">
-            {{> header}}
+            {{#if userId}}
+            {{> header-logged-in}}
+            {{else}}
+            {{> header-login}}
+            {{/if}}
             <div class="container" style="margin-top: 80px">{{{body}}}</div>
             {{> footer}}
         </div>

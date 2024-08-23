@@ -1,7 +1,7 @@
 <div class="mt-4">
     <div class="form-group">
         <h1>Create a course</h1>
-        <form method="POST" action="store">
+        <form method="POST" action="store" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
                 <input type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp">
@@ -13,7 +13,8 @@
             </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Image</label>
-                <input type="text" class="form-control" id="image" name="image" aria-describedby="imageHelp">
+                {{!-- <input type="text" class="form-control" id="image" name="image" aria-describedby="imageHelp"> --}}
+                <input class="form-control" type="file" id="formFile" name="image" accept="image/*" required>
                 <div id="imageHelp" class="form-text">URL of the image</div>
             </div>
             <div class="mb-3">

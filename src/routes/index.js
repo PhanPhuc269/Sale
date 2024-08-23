@@ -2,14 +2,18 @@ const newRouter=require('./news');
 const siteRouter=require('./sites');
 const coursesRouter=require('./courses');
 const meRouter=require('./me');
-
+function requireLogin(req, res, next) {
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+    next();
+}
 function router(app)
 {
-    app.use('/news',newRouter);
+    app.use('/news',requireLogin, newRouter);
+    app.use('/me',requireLogin,  meRouter)
+    app.use('/courses',requireLogin,  coursesRouter)
     app.use('/', siteRouter)
-    app.use('/me', meRouter)
-    app.use('/courses', coursesRouter)
-    
 
     // app.get('/search', function (req, res) {
     //     res.render('search');
