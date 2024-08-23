@@ -2,6 +2,9 @@ const Course = require('../models/Course');
 const { mutipleMongooseToObject } = require('../../util/mongoose');
 const { mongooseToObject } = require('../../util/mongoose');
 const upload = require('../upload/image');
+const fs = require('fs');
+const path = require('path');
+
 
 class CoursesController{
     show(req,res, next){
@@ -35,7 +38,7 @@ class CoursesController{
         
     };
     edit(req,res,next){
-        Course.findById(req.params.id, req.session.userId)
+        Course.findById({_id: req.params.id,user: req.session.userId})
             .then(course => res.render('courses/edit',{course: mongooseToObject(course)}))
             .catch(next);
     }
@@ -51,10 +54,35 @@ class CoursesController{
 
     }
     destroy(req,res,next){
-        Course.deleteOne({_id: req.params.id, user: req.session.userId})
-            .then(() => res.redirect('back'))
-            .catch(next);
+        Course.findWithDeleted({ _id: req.params.id, user: req.session.userId })
+            .then(courses => {
 
+                if (!courses) {
+                    throw new Error('Course not found');
+                }
+                const coursesObj = mutipleMongooseToObject(courses);
+                // Lấy danh sách các đường dẫn hình ảnh cần xóa
+                const imagePaths = coursesObj.map(course => {
+                    return path.join(__dirname, '../../public', course.image);
+                });
+                // Xóa ảnh từ thư mục
+                // Xóa từng hình ảnh
+                imagePaths.forEach(imagePath => {
+                    fs.unlink(imagePath, (err) => {
+                        if (err) {
+                            console.error('Error deleting image:', err);
+                        }
+                    });
+                });
+                // Lấy danh sách các khóa học cần xóa
+                const courseIds = courses.map(course => course._id);
+
+                // Xóa các khóa học từ cơ sở dữ liệu
+                Course.deleteMany({ _id: { $in: courseIds }, user: req.session.userId })
+                    .then(() => res.redirect('back'))
+                    .catch(next);
+            })
+            .catch(next);
     }
     restore(req,res,next){
         Course.restore({_id: req.params.id, user: req.session.userId})

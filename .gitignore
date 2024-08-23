@@ -1,3 +1,4 @@
 .vscode
 
+app/config/db/index.js
 node_modules/

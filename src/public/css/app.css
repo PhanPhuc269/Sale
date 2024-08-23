@@ -1,6 +1,6 @@
 @charset "UTF-8";
 .welcome {
-  color: #abf4f4; }
+  color: #6ef0d2; }
 
 .user-avatar {
   width: 28px;
@@ -38,3 +38,6 @@ body {
   align-items: center;
   text-align: center;
   justify-content: center; }
+
+.bg-card {
+  background-color: #122136; }

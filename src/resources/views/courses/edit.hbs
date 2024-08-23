@@ -1,5 +1,5 @@
 <div class="mt-4">
-    <div class="form-group">
+    <div class="form-group text-white">
         <h1>Sửa khóa học</h1>
         <form method="POST" action="/courses/{{course._id}}?_method=PUT">
             <div class="mb-3">
@@ -13,7 +13,8 @@
             </div>
             <div class="mb-3">
                 <label for="image" class="form-label">Image</label>
-                <input type="text" class="form-control" value="{{course.image}}" id="image" name="image" aria-describedby="imageHelp">
+                <img src="{{course.image}}" alt="Current Image" class="img-thumbnail mb-2" style="max-width: 200px;">
+                <input class="form-control" value="{{course.image}}" type="file" id="formFile" name="image" accept="image/*">
                 <div id="imageHelp" class="form-text">URL of the image</div>
             </div>
             <div class="mb-3">
