@@ -1,10 +1,10 @@
 <div class="mt-2">
-    <div class="row">
+    <div class="row bg-ctn text-white">
         <div class="col-lg-3">
-            <button>Học ngay</button>
+            {{!-- <button class="btn btn-primary">Học ngay</button> --}}
         </div>
-        <div class="col-lg-9 bg-primary-subtle">
-            <h1>{{course.name}}</h1>
+        <div class="col-lg-9 bd-ctn ">
+            <h1 class="mb-4">{{course.name}}</h1>
             <iframe width="560" height="315" src="https://www.youtube.com/embed/{{course.videoid}}"
                 title="YouTube video player" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

@@ -4,7 +4,11 @@ const coursesRouter=require('./courses');
 const meRouter=require('./me');
 function requireLogin(req, res, next) {
     if (!req.session.userId) {
-        return res.redirect('/login');
+        return res.redirect('/');
+    }
+    if(req.session.authenticated != true)
+    {
+        return res.redirect('/authen-verify');
     }
     next();
 }

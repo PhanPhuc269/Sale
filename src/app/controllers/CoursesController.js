@@ -42,10 +42,47 @@ class CoursesController{
             .then(course => res.render('courses/edit',{course: mongooseToObject(course)}))
             .catch(next);
     }
-    update(req,res,next){
-        Course.updateOne({_id: req.params.id,user: req.session.userId}, req.body)
-            .then(() => res.redirect('/me/stored/courses'))
-            .catch(next);
+    update(req, res, next) {
+        upload.single('image')(req, res, function (err) {
+            if (err) {
+                return next(err);
+            }
+
+            // Tìm khóa học hiện tại
+            Course.findById({ _id: req.params.id, user: req.session.userId })
+                .then(course => {
+                    if (!course) {
+                        return res.status(404).send('Course not found');
+                    }
+
+                    // Kiểm tra và cập nhật ảnh
+                    if (req.file) {
+                        // Đường dẫn ảnh cũ
+                        const oldImagePath = path.join(__dirname, '..', '..', 'public', course.image);
+
+                        // Xóa ảnh cũ nếu có
+                        if (course.image) {
+                            fs.unlink(oldImagePath, (err) => {
+                                if (err) {
+                                    console.error('Error deleting old image:', err);
+                                }
+                            });
+                        }
+
+                        // Lưu tên tệp ảnh mới vào cơ sở dữ liệu
+                        req.body.image = `/img/${req.file.filename}`;
+                    } else {
+                        // Giữ lại ảnh cũ nếu không có ảnh mới
+                        req.body.image = course.image;
+                    }
+
+                    // Cập nhật khóa học
+                    Course.updateOne({ _id: req.params.id, user: req.session.userId }, req.body)
+                        .then(() => res.redirect('/me/stored/courses'))
+                        .catch(next);
+                })
+                .catch(next);
+        });
     }
     delete(req,res,next){
         Course.delete({_id: req.params.id, user: req.session.userId})

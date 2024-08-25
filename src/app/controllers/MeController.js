@@ -22,7 +22,7 @@ class MeController{
         }        
     }
     storedCourses(req,res,next){
-        Promise.all([Course.find({user: req.session.userId}).sortable(req),Course.countDocumentsWithDeleted({deleted:true})])
+        Promise.all([Course.find({user: req.session.userId}).sortable(req),Course.countDocumentsWithDeleted({deleted:true, user: req.session.userId})])
             .then(([courses,deletedCount]) => res.render('me/stored-courses',
                 {
                     courses: mutipleMongooseToObject(courses),
