@@ -3,7 +3,7 @@
 const chatModal = document.getElementById('chatModal');
 const formChat = document.getElementById('chat-form');
 const messages = document.querySelector('#chatModal .messages');
-const socket = io('http://localhost:3000');
+const socket = io('https://du-an-node-js-dau-tay.onrender.com/');
 let userId;
 
 // Hàm để lấy giá trị của cookie
