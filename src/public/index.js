@@ -21,7 +21,7 @@ socket.on('register', (data) => {
 chatModal.addEventListener('shown.bs.modal', function () {
     const messages = chatModal.querySelector('.messages');
     messages.scrollTop = messages.scrollHeight;
-    const receiverID = (userId !='66d6b6fbc97455b39dfe5025')? '66d6b6fbc97455b39dfe5025': '66d5b0b0b10fe1d80b69a577';
+    const receiverID = (userId !='66caf87123950ddd71daaeab')? '66caf87123950ddd71daaeab': '66d5b0b0b10fe1d80b69a577';
     socket.emit('load-messages', receiverID);
 });
 // Nhận và hiển thị tin nhắn cũ
@@ -54,7 +54,7 @@ chatInput.addEventListener('keydown', function (event) {
             console.log(userId);
             const messageData = {
                 sender: userId,  // Bạn có thể thay đổi hoặc lấy từ thông tin người dùng đăng nhập
-                receiver: (userId !='66d6b6fbc97455b39dfe5025')? '66d6b6fbc97455b39dfe5025': '66d5b0b0b10fe1d80b69a577',  // Nhận từ input hoặc logic phía server
+                receiver: (userId !='66caf87123950ddd71daaeab')? '66caf87123950ddd71daaeab': '66d5b0b0b10fe1d80b69a577',  // Nhận từ input hoặc logic phía server
                 message: messageText,
             };
             socket.emit('chat message', messageData);
