@@ -1,0 +1,213 @@
+<div class="container mt-4">
+    <!-- Khu vực đăng bài viết mới -->
+    <div class="card mb-4">
+        <form class="card-body" method="Post" enctype="multipart/form-data">
+            <h5 class="card-title">Tạo bài viết mới</h5>
+            <div class="mb-3">
+                <textarea class="form-control" rows="3" placeholder="Bạn đang nghĩ gì?" name="content"></textarea>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div>
+                    <button type="input" class="btn btn-light btn-sm" id="uploadButton">
+                        <i class="bi bi-image"></i> Ảnh/Video
+                    </button>
+                    <div id="fileCountDisplay"></div>
+                    <input type="file" id="fileInput" multiple accept="image/*,video/*"  name="media">
+                    <button type="button" class="btn btn-light btn-sm">
+                        <i class="bi bi-emoji-smile"></i> Cảm xúc
+                    </button>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Đăng</button>
+            </div>
+        </form>
+    </div>
+    {{#each posts}}
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex">
+                    <img src="https://via.placeholder.com/50" alt="Avatar" class="rounded-circle me-2">
+                    <div>
+                        <h6 class="mb-0">{{this.name}}</h6>
+                        <small class="text-muted">10 phút trước</small>
+                    </div>
+                </div>
+                <p class="mt-2">{{this.content}}</p>
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+
+                
+                {{!-- <div class="image-item">
+                    <img src="{{this}}" alt="Post Image" class="img-fluid rounded mb-2">
+                    
+                </div> --}}
+                <div class="gallery">
+                    {{#each this.images}}
+                    <div class="gallery-item">
+                        <img src="{{this}}" alt="Image 1" data-bs-toggle="modal" class="img-fluid rounded mb-2" data-bs-target="#mediaModal" data-index="0">
+                    </div>
+                    {{/each}}
+                    {{#each this.videos}}
+                    <div class="gallery-item">
+                        <video data-bs-toggle="modal" data-bs-target="#mediaModal" data-index="2" class="img-fluid rounded mb-2" controls>
+                            <source src="{{this}}" type="video/mp4">
+                        </video>
+                    </div>
+                    {{/each}}
+                </div>
+                
+                <div class="d-flex justify-content-around">
+                    <button type="button" class="btn btn-light btn-sm">
+                        <i class="bi bi-hand-thumbs-up"></i> Thích
+                    </button>
+                    <button type="button" class="btn btn-light btn-sm">
+                        <i class="bi bi-chat"></i> Bình luận
+                    </button>
+                    <button type="button" class="btn btn-light btn-sm">
+                        <i class="bi bi-share"></i> Chia sẻ
+                    </button>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+    <!-- Danh sách bài viết đã đăng -->
+    
+    <!-- Bài viết khác -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex">
+                <img src="https://via.placeholder.com/50" alt="Avatar" class="rounded-circle me-2">
+                <div>
+                    <h6 class="mb-0">Tên Người Dùng</h6>
+                    <small class="text-muted">2 giờ trước</small>
+                </div>
+            </div>
+            <p class="mt-2">Đây là nội dung bài viết khác.</p>
+            <div class="d-flex justify-content-around">
+                <button type="button" class="btn btn-light btn-sm">
+                    <i class="bi bi-hand-thumbs-up"></i> Thích
+                </button>
+                <button type="button" class="btn btn-light btn-sm">
+                    <i class="bi bi-chat"></i> Bình luận
+                </button>
+                <button type="button" class="btn btn-light btn-sm">
+                    <i class="bi bi-share"></i> Chia sẻ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{{!-- <!-- Modal -->
+<div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="mediaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        
+                        {{#each this.images}}
+                        <div class="swiper-slide">
+                            <img src="{{this}}" alt="Image 1">
+                        </div>
+                        {{/each}}
+                        {{#each this.videos}}
+                        <div class="swiper-slide">
+                            <video data-bs-toggle="modal" data-bs-target="#mediaModal" data-index="2" controls>
+                                <source src="{{this}}" type="video/mp4">
+                            </video>
+                        </div>
+                        {{/each}}
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                    <!-- Add Navigation -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> --}}
+<!-- Modal -->
+<div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <!-- Nội dung gallery sẽ được thêm vào đây -->
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                    <!-- Add Navigation -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let swiper;
+        if(!swiper) {
+            swiper = new Swiper('.swiper-container', {
+                loop: true,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                
+            });
+        }
+
+        // Bắt sự kiện khi hình ảnh/video được nhấp vào
+        const galleryItems = document.querySelectorAll('.gallery-item img, .gallery-item video');
+        galleryItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                const gallery = item.closest('.gallery'); // Lấy gallery chứa hình ảnh hoặc video được nhấp vào
+                const swiperWrapper = document.querySelector('.swiper-wrapper');
+                if (gallery && swiperWrapper) {
+                    swiperWrapper.innerHTML = ''; // Xóa nội dung cũ
+                    const galleryItems = gallery.querySelectorAll('.gallery-item');
+                    galleryItems.forEach((galleryItem, i) => {
+                        const swiperSlide = document.createElement('div');
+                        swiperSlide.classList.add('swiper-slide');
+                        const slItem=galleryItem.cloneNode(true).querySelector('img', 'video');
+                        swiperSlide.appendChild(slItem); // Thêm tất cả các hình ảnh hoặc video
+                        {{!-- if (i != index) {
+                            slItem.classList.add('dis-none'); // Ẩn các hình ảnh hoặc video không được nhấp vào
+                        } --}}
+                        swiperWrapper.appendChild(swiperSlide);
+                    });
+                }
+                swiper.update(); // Cập nhật Swiper
+                const modal = new bootstrap.Modal(document.getElementById('galleryModal'));
+                modal.show(); // Hiển thị modal
+                swiper.slideTo(index); // Chuyển đến hình ảnh hoặc video đầu tiên trong modal
+
+                // Hiển thị các slide khi Swiper chuyển slide
+                {{!-- swiper.on('slideChange', function () {
+                    const slides = swiper.slides;
+                    console.log(swiper.activeIndex);
+                    slides.forEach((slide, i) => {
+                        const slideItem = slide.closest('img, video');
+                        if (i == swiper.activeIndex) {
+                            slideItem.classList.remove('dis-none'); // Hiển thị slide hiện tại
+                        } else {
+                            slideItem.classList.add('dis-none'); // Ẩn các slide không được hiển thị
+                        }
+                    });
+                }); --}}
+            });
+        });
+    });
+</script>
+<!-- Sử dụng Bootstrap Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.css" rel="stylesheet">

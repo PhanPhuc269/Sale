@@ -23,8 +23,14 @@
         
             <li class="dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="https://scontent.fdad3-6.fna.fbcdn.net/v/t39.30808-1/454784787_2236732263354934_5316442304322831612_n.jpg?stp=cp0_dst-jpg_p40x40&_nc_cat=101&ccb=1-7&_nc_sid=0ecb9b&_nc_eui2=AeGSeLXpeRkayaEy1-beM_K8uTBNFUCkRNq5ME0VQKRE2tA90ODCjgcISh3w5LPLgPx0qbV8ZvM5bXNjKkCvKvE1&_nc_ohc=4RpVCpq0bJQQ7kNvgHy-m-z&_nc_ht=scontent.fdad3-6.fna&oh=00_AYCFzcosUrpiXLvmaSP9J5s_UcMALVNKttAZt8g8O4y4XQ&oe=66C6A7B6"
+                    <img src="/img/avatar.jpg"
                         alt="" class="user-avatar">
+                    <!-- Nút mở chat -->
+                    <button type="button" class="btn btn-primary position-fixed bottom-0 end-0 m-3" data-bs-toggle="modal"
+                        data-bs-target="#chatModal">
+                        <i class="fa-regular fa-comment-dots"></i>
+                        Chat
+                    </button>
                     Phan Phúc
                 </a>
                 <ul class="dropdown-menu">
@@ -37,7 +43,7 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                    <li><a class="dropdown-item " id="logoutButton" href="/logout">Đăng xuất</a></li>
                 </ul>
             </li>
         </ul>
@@ -47,3 +53,27 @@
         </div>
     </div>
 </nav>
+<!-- Modal chat -->
+<div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-scrollable position-fixed bottom-0 end-0 m-3"
+        style="max-height: 60%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="chatModalLabel">Chat với chúng tôi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="messages mb-3" style="max-height: 200px; overflow-y: auto;">
+                    <!-- Tin nhắn sẽ hiển thị ở đây -->
+                    <div class="message my-2 p-2 bg-light rounded">
+                        Chào bạn! Tôi có thể giúp gì cho bạn?
+                    </div>
+                </div>
+                <input type="text" class="form-control" placeholder="Nhập tin nhắn...">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="/index.js"></script>

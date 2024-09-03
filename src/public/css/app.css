@@ -1,5 +1,5 @@
 @charset "UTF-8";
-.welcome {
+.text-grt {
   color: #6ef0d2; }
 
 .user-avatar {
@@ -33,6 +33,7 @@ body {
   min-height: 300px; }
 
 .welcome {
+  color: #6ef0d2;
   height: 300px;
   display: flex;
   align-items: center;
@@ -46,3 +47,50 @@ body {
   background-color: #181919;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px; }
+
+.image-item {
+  position: relative;
+  overflow: hidden; }
+
+.image-item img {
+  width: 100%;
+  height: auto;
+  object-fit: cover; }
+
+.dis-none {
+  display: none; }
+
+.modal-sm {
+  max-width: 300px; }
+
+.modal-dialog-scrollable .modal-body {
+  padding: 0.5rem 1rem; }
+
+.messages {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 10px;
+  min-height: 250px;
+  overflow-y: auto; }
+
+.message {
+  background-color: #f1f1f1;
+  text-align: right;
+  border: 1px solid #2e2c2c; }
+
+.modal-header {
+  background-color: #132f4c;
+  color: white; }
+
+.modal-header .btn-close {
+  background: none;
+  border: none;
+  color: white; }
+
+.response {
+  background-color: #4e4949;
+  text-align: left; }

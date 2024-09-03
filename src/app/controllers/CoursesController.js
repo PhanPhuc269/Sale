@@ -1,9 +1,10 @@
 const Course = require('../models/Course');
 const { mutipleMongooseToObject } = require('../../util/mongoose');
 const { mongooseToObject } = require('../../util/mongoose');
-const upload = require('../upload/image');
+const upload = require('../upload');
 const fs = require('fs');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid'); // Import thư viện uuid nếu cần
 
 
 class CoursesController{
@@ -22,7 +23,17 @@ class CoursesController{
         console.log('Request Body:', req.body); // Kiểm tra dữ liệu từ biểu mẫu
         console.log('Request File:', req.file); // Kiểm tra tệp tải lên
         const formData = req.body;
-        formData.image = req.file ? `/img/${req.file.filename}` : `https://img.youtube.com/vi/${req.body.videoid}/sddefault.jpg`;
+        // Trích xuất UID từ link video YouTube
+        const videoUrl = req.body.videoid;
+        const videoIdMatch = videoUrl.match(/[?&]v=([^&#]+)/);
+        const videoId = videoIdMatch ? videoIdMatch[1] : null;
+
+        if (videoId) {
+            formData.video = videoId;
+        } else {
+            return res.status(400).send('Invalid YouTube URL');
+        }
+        formData.image = req.file ? `/img/${req.file.filename}` : `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
         formData.user= req.session.userId;
         const course=new Course(formData);
         // course.save()

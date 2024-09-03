@@ -3,10 +3,10 @@ const router =express.Router();
 
 const sitesController= require('../app/controllers/SitesController');
 function requireLogin(req, res, next) {
-    if (!req.session.userId) {
-        return res.redirect('/');
-    }
-    next();
+    // if (!req.session.userId) {
+    //     return res.redirect('/');
+    // }
+    // next();
 }
 router.get('/',sitesController.welcome);
 router.post('/login',sitesController.login);
