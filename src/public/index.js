@@ -1,9 +1,9 @@
 
-// Ví dụ: tự động cuộn đến cuối phần tin nhắn khi gửi tin mớihttps://du-an-node-js-dau-tay.onrender.com/
+// Ví dụ: tự động cuộn đến cuối phần tin nhắn khi gửi tin mới
 const chatModal = document.getElementById('chatModal');
 const formChat = document.getElementById('chat-form');
 const messages = document.querySelector('#chatModal .messages');
-const socket = io('');
+const socket = io('https://du-an-node-js-dau-tay.onrender.com/');
 let userId;
 
 // Hàm để lấy giá trị của cookie
