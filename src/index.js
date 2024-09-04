@@ -103,7 +103,7 @@ io.on('connection', async (socket) => {
   // Xử lý sự kiện gửi tin nhắn
   socket.on('chat message', (data) => {
     const newMessage = new Message({
-      sender: socket.request.session.userId,
+      sender: data.sender,
       receiver: data.receiver,
       message: data.message,
     });
