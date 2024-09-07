@@ -14,12 +14,13 @@ class SitesController{
         .catch(next);
     }
     async register(req, res,next){
-        const { username, password } = req.body;
+        const { username, password,name } = req.body;
         try {
-            const user = new User({ username, password});
+            const user = new User({ username, password,name});
             await user.save();
             req.session.userId = user._id;
-            res.redirect('/set-authentication');
+            //res.redirect('/set-authentication');
+            res.redirect('/me/home');
         } catch (error) {
             next(error);
         }
