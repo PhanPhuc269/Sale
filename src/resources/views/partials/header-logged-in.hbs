@@ -125,21 +125,4 @@
 
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('list-friends').addEventListener('click', function (event) {
-            if (event.target && event.target.matches('.list-group-item')) {
-                var button = event.target;  // Phần tử được nhấp
-                var receiverID = button.getAttribute('data-id');  // Lấy course ID từ data-id
-
-                // Chuyển sang tab tin nhắn
-                var messagesTab = new bootstrap.Tab(document.getElementById('messages-tab'));
-                messagesTab.show();
-
-                // Gửi sự kiện load-messages với receiverID
-                socket.emit('load-messages', receiverID);
-            }
-        });
-    });
-</script>
 <script src="/index.js"></script>

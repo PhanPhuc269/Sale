@@ -1,9 +1,9 @@
 
-// Ví dụ: tự động cuộn đến cuối phần tin nhắn khi gửi tin mới
+// Ví dụ: tự động cuộn đến cuối phần tin nhắn khi gửi tin mới'https://du-an-node-js-dau-tay.onrender.com/'
 const chatModal = document.getElementById('chatModal');
 const formChat = document.getElementById('chat-form');
 const messages = document.querySelector('#chatModal .messages');
-const socket = io('https://du-an-node-js-dau-tay.onrender.com/');
+const socket = io();
 let userId;
 let receiverID;
 
@@ -13,6 +13,21 @@ function getCookie(name) {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
+document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('list-friends').addEventListener('click', function (event) {
+            if (event.target && event.target.matches('.list-group-item')) {
+                var button = event.target;  // Phần tử được nhấp
+                receiverID = button.getAttribute('data-id');  // Lấy course ID từ data-id
+
+                // Chuyển sang tab tin nhắn
+                var messagesTab = new bootstrap.Tab(document.getElementById('messages-tab'));
+                messagesTab.show();
+
+                // Gửi sự kiện load-messages với receiverID
+                socket.emit('load-messages', receiverID);
+            }
+        });
+    });
 // Đăng ký userId khi kết nối
 socket.on('register', (data) => {
     userId = data.userId;
