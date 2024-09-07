@@ -1,4 +1,7 @@
 const Handlebars = require('handlebars');
+const User = require('../app/models/User');
+const { mutipleMongooseToObject } = require('../util/mongoose');
+const { mongooseToObject } = require('../util/mongoose');
 
 module.exports={
     sum: (a, b) => a + b,
@@ -26,5 +29,26 @@ module.exports={
         <i class="${icon}"></i>
       </a>`;
         return new Handlebars.SafeString(output);
-    }
+    },
+    eq: (media, type)=>{
+      if (!media) {
+        return false;
+      }
+
+      // Các phần mở rộng tệp phổ biến cho video và hình ảnh
+      const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'];
+      const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'];
+
+      const fileExtension = media.split('.').pop().toLowerCase();
+
+      // Kiểm tra loại tệp
+      if (type === 'image') {
+          return imageExtensions.includes(fileExtension);
+      } else if (type === 'video') {
+          return videoExtensions.includes(fileExtension);
+      }
+
+      return false;
+    },
+    
 }

@@ -78,7 +78,8 @@
 
             if (result.success) {
                 // Chuyển hướng hoặc xử lý đăng nhập thành công
-                window.location.href = '/authen-verify';
+                //window.location.href = '/authen-verify';
+                window.location.href = '/me/home';
             } else {
                 // Hiển thị thông báo lỗi
                 document.getElementById('error-message').innerText = result.message;

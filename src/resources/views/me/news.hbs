@@ -8,9 +8,9 @@
             </div>
             <div class="d-flex justify-content-between">
                 <div>
-                    <button type="input" class="btn btn-light btn-sm" id="uploadButton">
+                    {{!-- <button type="input" class="btn btn-light btn-sm" id="uploadButton">
                         <i class="bi bi-image"></i> Ảnh/Video
-                    </button>
+                    </button> --}}
                     <div id="fileCountDisplay"></div>
                     <input type="file" id="fileInput" multiple accept="image/*,video/*"  name="media">
                     <button type="button" class="btn btn-light btn-sm">
@@ -25,7 +25,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <div class="d-flex">
-                    <img src="https://via.placeholder.com/50" alt="Avatar" class="rounded-circle me-2">
+                    <img src="/img/avatar.jpg" alt="Avatar" class="rounded-circle me-2 user-avatar">
                     <div>
                         <h6 class="mb-0">{{this.name}}</h6>
                         <small class="text-muted">10 phút trước</small>
@@ -39,19 +39,24 @@
                     <img src="{{this}}" alt="Post Image" class="img-fluid rounded mb-2">
                     
                 </div> --}}
-                <div class="gallery">
-                    {{#each this.images}}
-                    <div class="gallery-item">
-                        <img src="{{this}}" alt="Image 1" data-bs-toggle="modal" class="img-fluid rounded mb-2" data-bs-target="#mediaModal" data-index="0">
-                    </div>
+                <div class="gallery row">
+                    {{#each this.media}}
+                        {{#if (eq this 'image')}}
+                        <div class="gallery-item col-md-4 col-lg-3 mb-4">
+                            <img src="{{this}}" alt="Image 1" data-bs-toggle="modal" class="img-fluid rounded" data-bs-target="#mediaModal" data-index="0">
+                        </div>
+                        {{/if}}
+                        {{#if (eq this 'video')}}
+                        <div class="gallery-item">
+                            <video data-bs-toggle="modal" data-bs-target="#mediaModal" data-index="2" class="img-fluid rounded mb-2 w-75" controls>
+                                <source src="{{this}}" type="video/mp4">
+                            </video>
+                        </div>
+                        {{/if}}
                     {{/each}}
-                    {{#each this.videos}}
-                    <div class="gallery-item">
-                        <video data-bs-toggle="modal" data-bs-target="#mediaModal" data-index="2" class="img-fluid rounded mb-2" controls>
-                            <source src="{{this}}" type="video/mp4">
-                        </video>
-                    </div>
-                    {{/each}}
+                    {{!-- {{#each this.videos}}
+                    
+                    {{/each}} --}}
                 </div>
                 
                 <div class="d-flex justify-content-around">
@@ -152,9 +157,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         let swiper;
-        if(!swiper) {
+        if (!swiper) {
             swiper = new Swiper('.swiper-container', {
-                loop: true,
+                loop: false, // Không cần loop ở đây để duyệt qua toàn bộ gallery
                 pagination: {
                     el: '.swiper-pagination',
                     clickable: true,
@@ -163,7 +168,6 @@
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
                 },
-                
             });
         }
 
@@ -175,37 +179,63 @@
                 const swiperWrapper = document.querySelector('.swiper-wrapper');
                 if (gallery && swiperWrapper) {
                     swiperWrapper.innerHTML = ''; // Xóa nội dung cũ
-                    const galleryItems = gallery.querySelectorAll('.gallery-item');
-                    galleryItems.forEach((galleryItem, i) => {
-                        const swiperSlide = document.createElement('div');
-                        swiperSlide.classList.add('swiper-slide');
-                        const slItem=galleryItem.cloneNode(true).querySelector('img', 'video');
-                        swiperSlide.appendChild(slItem); // Thêm tất cả các hình ảnh hoặc video
-                        {{!-- if (i != index) {
-                            slItem.classList.add('dis-none'); // Ẩn các hình ảnh hoặc video không được nhấp vào
-                        } --}}
-                        swiperWrapper.appendChild(swiperSlide);
+
+                    // Thêm ảnh hoặc video được nhấp vào đầu tiên
+                    const clickedSlide = document.createElement('div');
+                    clickedSlide.classList.add('swiper-slide');
+                    clickedSlide.appendChild(item.cloneNode(true));
+                    swiperWrapper.appendChild(clickedSlide);
+
+                    // Thêm các ảnh và video còn lại
+                    gallery.querySelectorAll('.gallery-item').forEach((galleryItem, i) => {
+                        if (galleryItem.querySelector('img, video').src !== item.src) { // Bỏ qua ảnh hoặc video đã được thêm đầu tiên
+                            const swiperSlide = document.createElement('div');
+                            swiperSlide.classList.add('swiper-slide');
+                            swiperSlide.appendChild(galleryItem.querySelector('img, video').cloneNode(true));
+                            swiperWrapper.appendChild(swiperSlide);
+                        }
                     });
                 }
+
                 swiper.update(); // Cập nhật Swiper
                 const modal = new bootstrap.Modal(document.getElementById('galleryModal'));
                 modal.show(); // Hiển thị modal
-                swiper.slideTo(index); // Chuyển đến hình ảnh hoặc video đầu tiên trong modal
-
-                // Hiển thị các slide khi Swiper chuyển slide
-                {{!-- swiper.on('slideChange', function () {
-                    const slides = swiper.slides;
-                    console.log(swiper.activeIndex);
-                    slides.forEach((slide, i) => {
-                        const slideItem = slide.closest('img, video');
-                        if (i == swiper.activeIndex) {
-                            slideItem.classList.remove('dis-none'); // Hiển thị slide hiện tại
-                        } else {
-                            slideItem.classList.add('dis-none'); // Ẩn các slide không được hiển thị
-                        }
-                    });
-                }); --}}
+                swiper.slideTo(0); // Bắt đầu với ảnh hoặc video đã được nhấp vào
+                updateSlides();
             });
+        });
+        // Thêm sự kiện lắng nghe cho các nút điều hướng
+        document.querySelector('.swiper-button-next').addEventListener('click', () => {
+            updateSlides();
+        });
+
+        document.querySelector('.swiper-button-prev').addEventListener('click', () => {
+            updateSlides();
+        });
+        function updateSlides() {
+            const slides = document.querySelectorAll('.swiper-slide');
+            slides.forEach((slide, index) => {
+                media = slide.querySelector('img, video');
+                if (index === swiper.realIndex) {
+                    media.classList.remove('dis-none');
+                } else {
+                    media.classList.add('dis-none');
+                }
+            });
+        }
+        // Lắng nghe sự kiện thoát modal
+        document.getElementById('galleryModal').addEventListener('hidden.bs.modal', () => {
+            // Xóa nội dung của swiper-wrapper
+            swiperWrapper=document.querySelector('.swiper-wrapper');
+            swiperWrapper.innerHTML = '';
+        });
+        
+    });
+    document.querySelectorAll('video').forEach(video=>{
+        video.addEventListener('click',function(){
+            event.preventDefault(); // Ngăn chặn hành vi mặc định
+            event.stopPropagation();
+            this.pause();
         });
     });
 </script>

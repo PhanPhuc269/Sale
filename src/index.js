@@ -9,6 +9,7 @@ const { Server } = require('socket.io');
 const http = require('http');
 const Message = require('./app/models/Message');
 const sharedsession = require('express-socket.io-session');
+const friendsMiddleware = require('./app/middlewares/friendsMiddleware');
 
 const session = require('express-session');
 
@@ -50,6 +51,7 @@ app.use(express.json())
 app.use(methodOverride('_method'));
 app.use(morgan('combined'));
 app.use(sortMidleware);
+app.use(friendsMiddleware);
 app.use((req, res, next) => {
   res.locals.userId = req.session.userId;
   next();
@@ -63,7 +65,6 @@ app.engine('hbs', handlebars.engine({
   helpers: require('./helpers/handlebars')
 }));
 app.set('view engine', 'hbs');
-
 app.set('views', path.join(__dirname, 'resources/views'));
 
 route(app);

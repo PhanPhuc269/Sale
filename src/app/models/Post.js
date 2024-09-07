@@ -8,8 +8,9 @@ mongoose.plugin(slug);
 const Schema = mongoose.Schema;
 const Post = new Schema({
     content: { type: String, maxLength: 255 },
-    images: { type: [String], maxLength: 255 },
-    videos: { type: [String], maxLength: 255 },
+    media: { type: [String], maxLength: 255 },
+    //images: { type: [String], maxLength: 255 },
+    // videos: { type: [String], maxLength: 255 },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     name: { type: String, maxLength: 255 },
 },{

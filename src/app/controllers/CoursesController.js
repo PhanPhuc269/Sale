@@ -1,10 +1,13 @@
 const Course = require('../models/Course');
 const { mutipleMongooseToObject } = require('../../util/mongoose');
 const { mongooseToObject } = require('../../util/mongoose');
-const upload = require('../upload');
+//const upload = require('../upload');
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid'); // Import thư viện uuid nếu cần
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+const cloudinary = require('../../config/cloudinaryConfig');
 
 
 class CoursesController{
@@ -19,40 +22,117 @@ class CoursesController{
         res.render('courses/create');
     }
     store(req, res, next) {
-        upload.single('image')(req, res, async (err) => {
-        console.log('Request Body:', req.body); // Kiểm tra dữ liệu từ biểu mẫu
-        console.log('Request File:', req.file); // Kiểm tra tệp tải lên
+    upload.single('image')(req, res, (err) => {
+        if (err) {
+            return next(err); // Xử lý lỗi của multer
+        }
+
         const formData = req.body;
-        // Trích xuất UID từ link video YouTube
         const videoUrl = req.body.videoid;
-        const videoIdMatch = videoUrl.match(/[?&]v=([^&#]+)/);
+
+        // Cải thiện regex để bao quát nhiều trường hợp URL YouTube hơn
+        const videoIdMatch = videoUrl.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
         const videoId = videoIdMatch ? videoIdMatch[1] : null;
 
-        if (videoId) {
-            formData.video = videoId;
+        if (videoIdMatch) {
+            formData.videoid = videoId;
         } else {
             return res.status(400).send('Invalid YouTube URL');
         }
-        formData.image = req.file ? `/img/${req.file.filename}` : `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
-        formData.user= req.session.userId;
-        const course=new Course(formData);
-        // course.save()
-        //     .then(() => res.redirect())
-        //     .catch(next);
-         try {
-                await course.save();
-                res.redirect('/me/stored/courses');
-            } catch (error) {
-                next(error);
-            }
-        })
-        
-    };
+
+        if (req.file) {
+            cloudinary.uploader.upload(req.file.path, { resource_type: "image" }, (error, result) => {
+                if (error) {
+                    // Đảm bảo chỉ gửi một phản hồi HTTP
+                    return res.status(500).json({
+                        message: 'File upload failed',
+                        error: error.message,
+                    });
+                }
+
+                const fileUrl = result.secure_url;
+                formData.image = fileUrl;
+
+                // Sau khi tải lên Cloudinary thành công, lưu khóa học
+                formData.user = req.session.userId;
+                const course = new Course(formData);
+
+                course.save()
+                    .then(() => res.redirect('/'))
+                    .catch((saveError) => {
+                        // Đảm bảo chỉ gửi một phản hồi HTTP
+                        res.status(500).json({
+                            message: 'Failed to save course',
+                            error: saveError.message,
+                        });
+                    });
+            });
+        } else {
+            // Xử lý trường hợp không có file upload
+            formData.image = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+            formData.user = req.session.userId;
+            const course = new Course(formData);
+
+            course.save()
+                .then(() => res.redirect('/'))
+                .catch((saveError) => {
+                    // Đảm bảo chỉ gửi một phản hồi HTTP
+                    res.status(500).json({
+                        message: 'Failed to save course',
+                        error: saveError.message,
+                    });
+                });
+        }
+        });
+    }
+
     edit(req,res,next){
         Course.findById({_id: req.params.id,user: req.session.userId})
             .then(course => res.render('courses/edit',{course: mongooseToObject(course)}))
             .catch(next);
     }
+    // update(req, res, next) {
+    //     upload.single('image')(req, res, function (err) {
+    //         if (err) {
+    //             return next(err);
+    //         }
+
+    //         // Tìm khóa học hiện tại
+    //         Course.findById({ _id: req.params.id, user: req.session.userId })
+    //             .then(course => {
+    //                 if (!course) {
+    //                     return res.status(404).send('Course not found');
+    //                 }
+
+    //                 // Kiểm tra và cập nhật ảnh
+    //                 if (req.file) {
+    //                     // Đường dẫn ảnh cũ
+    //                     const oldImagePath = path.join(__dirname, '..', '..', 'public', course.image);
+
+    //                     // Xóa ảnh cũ nếu có
+    //                     if (course.image) {
+    //                         fs.unlink(oldImagePath, (err) => {
+    //                             if (err) {
+    //                                 console.error('Error deleting old image:', err);
+    //                             }
+    //                         });
+    //                     }
+
+    //                     // Lưu tên tệp ảnh mới vào cơ sở dữ liệu
+    //                     req.body.image = `/img/${req.file.filename}`;
+    //                 } else {
+    //                     // Giữ lại ảnh cũ nếu không có ảnh mới
+    //                     req.body.image = course.image;
+    //                 }
+
+    //                 // Cập nhật khóa học
+    //                 Course.updateOne({ _id: req.params.id, user: req.session.userId }, req.body)
+    //                     .then(() => res.redirect('/me/stored/courses'))
+    //                     .catch(next);
+    //             })
+    //             .catch(next);
+    //     });
+    // }
     update(req, res, next) {
         upload.single('image')(req, res, function (err) {
             if (err) {
@@ -65,34 +145,63 @@ class CoursesController{
                     if (!course) {
                         return res.status(404).send('Course not found');
                     }
+                    const videoUrl = req.body.videoid;
 
-                    // Kiểm tra và cập nhật ảnh
-                    if (req.file) {
-                        // Đường dẫn ảnh cũ
-                        const oldImagePath = path.join(__dirname, '..', '..', 'public', course.image);
+            // Cải thiện regex để bao quát nhiều trường hợp URL YouTube hơn
+            const videoIdMatch = videoUrl.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            const videoId = videoIdMatch ? videoIdMatch[1] : null;
 
-                        // Xóa ảnh cũ nếu có
-                        if (course.image) {
-                            fs.unlink(oldImagePath, (err) => {
-                                if (err) {
-                                    console.error('Error deleting old image:', err);
-                                }
-                            });
+            if (videoIdMatch) {
+                formData.videoid = videoId;
+            } else {
+                return res.status(400).send('Invalid YouTube URL');
+            }
+            req.body.videoid = videoId;
+            // Kiểm tra và cập nhật ảnh
+            if (req.file) {
+                // Xóa ảnh cũ nếu có
+                if (course.image) {
+                        // Phân tích URL để lấy public ID
+                    const imageUrlParts = course.image.split('/');
+                    const publicIdWithExtension = imageUrlParts[imageUrlParts.length - 1];
+                    const publicId = publicIdWithExtension.split('.')[0];
+                    console.log(publicId);
+                    cloudinary.uploader.destroy(publicId, (error, result) => {
+                        if (error) {
+                            console.error('Error deleting old image:', error);
                         }
+                    });
+                }
 
-                        // Lưu tên tệp ảnh mới vào cơ sở dữ liệu
-                        req.body.image = `/img/${req.file.filename}`;
-                    } else {
-                        // Giữ lại ảnh cũ nếu không có ảnh mới
-                        req.body.image = course.image;
+                // Lưu tên tệp ảnh mới vào cơ sở dữ liệu
+                cloudinary.uploader.upload(req.file.path , { resource_type: "image" }, (error, result) => {
+                    if (error) {
+                        // Đảm bảo chỉ gửi một phản hồi HTTP
+                        return res.status(500).json({
+                            message: 'File upload failed',
+                            error: error.message,
+                        });
                     }
 
-                    // Cập nhật khóa học
+                    const fileUrl = result.secure_url;
+                    req.body.image = fileUrl;
+                    console.log(req.body.image);
                     Course.updateOne({ _id: req.params.id, user: req.session.userId }, req.body)
-                        .then(() => res.redirect('/me/stored/courses'))
-                        .catch(next);
-                })
+                    .then(() => res.redirect('/me/stored/courses'))
+                    .catch(next);
+                });
+            } else {
+                // Giữ lại ảnh cũ nếu không có ảnh mới
+                req.body.image = course.image;
+                Course.updateOne({ _id: req.params.id, user: req.session.userId }, req.body)
+                .then(() => res.redirect('/me/stored/courses'))
                 .catch(next);
+            }
+            console.log(req.body.image);
+            // Cập nhật khóa học
+            
+        })
+        .catch(next);
         });
     }
     delete(req,res,next){

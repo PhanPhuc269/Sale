@@ -70,7 +70,8 @@ body{
     display: none;
 }
 .modal-sm {
-    max-width: 300px;
+    max-width: 400px;
+    min-width: 300px;
 }
 
 .modal-dialog-scrollable .modal-body {

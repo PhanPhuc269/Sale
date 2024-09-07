@@ -2,8 +2,11 @@ const Course = require('../models/Course');
 const User = require('../models/User');
 const { mutipleMongooseToObject } = require('../../util/mongoose');
 const { mongooseToObject } = require('../../util/mongoose');
-const upload = require('../upload');
+//const upload = require('../upload');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 const Post = require('../models/Post');
+const cloudinary = require('../../config/cloudinaryConfig');
 
 class MeController{
     async home(req,res, next){
@@ -51,6 +54,40 @@ class MeController{
             res.redirect('/');
         } 
     }
+    // creatPost(req,res,next)
+    // {
+    //     upload.array('media',20)(req, res, async (err) => {
+    //         if (err) {
+    //             return next(err);
+    //         }
+
+    //         const formData = req.body;
+    //         formData.images = [];
+    //         formData.videos = [];
+        
+    //         if (req.files) {
+    //             req.files.forEach(file => {
+    //                 if (file.mimetype.startsWith('image/')) {
+    //                     formData.images.push(`/img/${file.filename}`);
+    //                 } else if (file.mimetype.startsWith('video/')) {
+    //                     formData.videos.push(`/video/${file.filename}`);
+    //                 }
+    //             });
+    //         }
+
+    //         formData.user = req.session.userId;
+    //         const user = await User.findById(req.session.userId);
+    //         formData.name = mongooseToObject(user).username;
+    //         const post = new Post(formData);
+
+    //         try {
+    //             await post.save();
+    //             res.redirect('back');
+    //         } catch (error) {
+    //             next(error);
+    //         }
+    //     });
+    // }
     creatPost(req,res,next)
     {
         upload.array('media',20)(req, res, async (err) => {
@@ -59,17 +96,39 @@ class MeController{
             }
 
             const formData = req.body;
-            formData.images = [];
-            formData.videos = [];
+            formData.media = [];
         
             if (req.files) {
-                req.files.forEach(file => {
-                    if (file.mimetype.startsWith('image/')) {
-                        formData.images.push(`/img/${file.filename}`);
-                    } else if (file.mimetype.startsWith('video/')) {
-                        formData.videos.push(`/video/${file.filename}`);
-                    }
+                const uploadPromises = req.files.map(file => {
+                    return new Promise((resolve, reject) => {
+                        if (file.mimetype.startsWith('image/')) {
+                            cloudinary.uploader.upload(file.path, { resource_type: "image" }, (error, result) => {
+                                if (error) {
+                                    reject(error);
+                                } else {
+                                    resolve(result.secure_url);
+                                }
+                            });
+                        } else if (file.mimetype.startsWith('video/')) {
+                            cloudinary.uploader.upload(file.path, { resource_type: "video" }, (error, result) => {
+                                if (error) {
+                                    reject(error);
+                                } else {
+                                    resolve(result.secure_url);
+                                }
+                            });
+                        } else {
+                            resolve(null); // Bỏ qua các tệp không phải là hình ảnh/video
+                        }
+                    });
                 });
+
+                try {
+                    const mediaUrls = await Promise.all(uploadPromises);
+                    formData.media = mediaUrls.filter(url => url !== null); // Lọc bỏ các giá trị null
+                } catch (error) {
+                    return next(error);
+                }
             }
 
             formData.user = req.session.userId;

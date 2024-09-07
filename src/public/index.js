@@ -5,6 +5,7 @@ const formChat = document.getElementById('chat-form');
 const messages = document.querySelector('#chatModal .messages');
 const socket = io('https://du-an-node-js-dau-tay.onrender.com/');
 let userId;
+let receiverID;
 
 // Hàm để lấy giá trị của cookie
 function getCookie(name) {
@@ -12,21 +13,24 @@ function getCookie(name) {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
 }
-
 // Đăng ký userId khi kết nối
 socket.on('register', (data) => {
-  userId = data.userId;
-  console.log('Connected with userId:', userId);
+    userId = data.userId;
+    console.log('Connected with userId:', userId);
 });
+
+
 chatModal.addEventListener('shown.bs.modal', function () {
     const messages = chatModal.querySelector('.messages');
     messages.scrollTop = messages.scrollHeight;
-    const receiverID = (userId !='66c88776614bf1e4ccfca969')? '66c88776614bf1e4ccfca969': '66caf87123950ddd71daaeab';
+    //const receiverID = (userId !='66c88776614bf1e4ccfca969')? '66c88776614bf1e4ccfca969': '66caf87123950ddd71daaeab';
     socket.emit('load-messages', receiverID);
 });
 // Nhận và hiển thị tin nhắn cũ
 socket.on('load old messages', (messagesList) => {
-    messages.innerHTML = '';
+    messages.innerHTML = `<div class="message my-2 p-2 bg-light rounded">
+                        Chào bạn! Tôi có thể giúp gì cho bạn?
+                    </div>`;
     messagesList.forEach((message) => {
         if(message.sender == userId){
             const newMessage = document.createElement('div');
@@ -54,7 +58,7 @@ chatInput.addEventListener('keydown', function (event) {
             console.log(userId);
             const messageData = {
                 sender: userId,  // Bạn có thể thay đổi hoặc lấy từ thông tin người dùng đăng nhập
-                receiver: (userId !='66c88776614bf1e4ccfca969')? '66c88776614bf1e4ccfca969': '66caf87123950ddd71daaeab',  // Nhận từ input hoặc logic phía server
+                receiver: receiverID,//(userId !='66c88776614bf1e4ccfca969')? '66c88776614bf1e4ccfca969': '66caf87123950ddd71daaeab',  // Nhận từ input hoặc logic phía server
                 message: messageText,
             };
             socket.emit('chat message', messageData);
