@@ -19,8 +19,8 @@ class MeController{
 
         // }
         try {
-        // Tìm các khóa học thuộc về người dùng hiện tại
-        const courses = await Course.find({ user: req.session.userId });
+        // Tìm các khóa học thuộc về người dùng hiện tại{ user: req.session.userId }
+        const courses = await Course.find();
         res.render('me/home',{courses: mutipleMongooseToObject(courses)})
         } catch (err) {
             console.error(err);
@@ -46,8 +46,8 @@ class MeController{
     {
         try {
             const user = await User.findById(req.session.userId);
-        // Tìm các khóa học thuộc về người dùng hiện tại
-        const posts = await Post.find({ user: req.session.userId });
+        // Tìm các khóa học thuộc về người dùng hiện tại{ user: req.session.userId }
+        const posts = await Post.find().sort({createdAt: 'desc'});
         res.render('me/news',{posts: mutipleMongooseToObject(posts)})
         } catch (err) {
             console.error(err);
