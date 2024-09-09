@@ -34,12 +34,7 @@ body{
     min-height: 300px;
 }
 .welcome{
-    color: $gt-color;
-    height: 300px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
+    min-height: 500px;
 }
 .bg-card{
     background-color: #122136;

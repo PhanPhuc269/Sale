@@ -10,6 +10,7 @@ const http = require('http');
 const Message = require('./app/models/Message');
 const sharedsession = require('express-socket.io-session');
 const friendsMiddleware = require('./app/middlewares/friendsMiddleware');
+const User = require('./app/models/User');
 
 const session = require('express-session');
 
@@ -24,6 +25,7 @@ const io = new Server(httpServer);
 const port = process.env.PORT || 3000;
 
 const route = require('./routes');  
+const { mutipleMongooseToObject } = require('./util/mongoose');
 
 sessionMiddleware=session({
     secret: 'mySecret',
@@ -100,6 +102,66 @@ io.on('connection', async (socket) => {
     socket.emit('load old messages', messages);
   });
   
+  socket.on('recent-messages', async () => {
+    try {
+      let additionalNotices = [];
+      // Tải tin nhắn cũ từ MongoDB
+      const friends = await User.find({
+         _id: { $ne: userId }
+      });
+
+      const recentMessages = await Promise.all(friends.map( async friend => {
+        const messages = await Message.find({
+          $or: [
+            { sender: userId, receiver: friend._id },
+            { receiver: userId, sender: friend._id }
+          ]
+        }).sort({ createdAt: -1 }).limit(1); // Lấy tin nhắn mới nhất
+
+        if (messages.length > 0) {
+          const message = messages[0];
+          if (message.sender == userId) {
+            const notice = {
+              title: friend.name,
+              receiverID: friend._id,
+              message: 'Bạn: '+message.message,
+              timestamp: message.createdAt,
+            };
+            return notice;
+          } else {
+            const notice = {
+              title: friend.name,
+              receiverID: friend._id,
+              message: friend.name + ': '+ message.message,
+              timestamp: message.createdAt,
+            };
+            return notice;
+          }
+        } 
+        else {
+          const notice = {
+            title: friend.name,
+            receiverID: friend._id,
+            message: 'No messages found',
+            timestamp: new Date(),
+          };
+          additionalNotices.push(notice);
+          return null;
+        }
+      }));
+      // Lọc bỏ các giá trị null từ recentMessages
+      const filteredRecentMessages = recentMessages.filter(notice => notice !== null);
+      filteredRecentMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      // Nối các notice từ additionalNotices vào recentMessages
+      const combinedMessages = filteredRecentMessages.concat(additionalNotices);
+
+      
+      // Gửi tin nhắn cũ đến người dùng
+      socket.emit('recent-messages', filteredRecentMessages);
+    } catch (error) {
+      console.error('Error loading recent messages:', error);
+    }
+  });
   
   // Xử lý sự kiện gửi tin nhắn
   socket.on('chat message', (data) => {

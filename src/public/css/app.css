@@ -1,6 +1,6 @@
 @charset "UTF-8";
 .text-grt {
-  color: #6ef0d2; }
+  color: #bcf5ea; }
 
 .user-avatar {
   width: 28px;
@@ -33,12 +33,7 @@ body {
   min-height: 300px; }
 
 .welcome {
-  color: #6ef0d2;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  justify-content: center; }
+  min-height: 500px; }
 
 .bg-card {
   background-color: #122136; }
@@ -66,9 +61,8 @@ body {
   display: none; }
 
 .modal-sm {
-  max-width: 400px; 
-  min-width: 300px;
-}
+  max-width: 400px;
+  min-width: 300px; }
 
 .modal-dialog-scrollable .modal-body {
   padding: 0.5rem 1rem; }

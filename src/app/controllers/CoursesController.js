@@ -12,7 +12,7 @@ const cloudinary = require('../../config/cloudinaryConfig');
 
 class CoursesController{
     show(req,res, next){
-        Course.findOne({slug: req.params.slug, user: req.session.userId})
+        Course.findOne({slug: req.params.slug})
         .then(course => {
             res.render('courses/show', {course: mongooseToObject(course)})
         })
