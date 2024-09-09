@@ -147,9 +147,9 @@ socket.on('chat message', (data) => {
 document.getElementById('logoutButton').addEventListener('click', () => {
     socket.emit('disconnect');
 });
-chatModal.getElementById('recent-tab').addEventListener('click', function () {
+document.getElementById('recent-tab').addEventListener('click', function () {
     socket.emit('recent-messages');
 });
-chatModal.getElementById('messages-tab').addEventListener('click', function () {
+document.getElementById('messages-tab').addEventListener('click', function () {
     socket.emit('load-messages', receiverID);
 });
