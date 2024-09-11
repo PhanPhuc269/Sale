@@ -11,7 +11,8 @@ const Course = new Schema({
     name: { type: String, maxLength: 255 },
     description: { type: String, maxLength: 600 },
     image: { type: String, default: null },
-    videoid: { type: String, maxLength: 255 },
+    videoid: { type: [String], maxLength: 255 },
+    document: { type: [String], maxLength: 255 },
     slug: { type: String, slug: 'name', unique: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 },{

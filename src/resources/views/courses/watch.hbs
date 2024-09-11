@@ -1,0 +1,53 @@
+<div class="container mt-4 bg-black text-white p-4 rounded">
+    <!-- Video Section -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="ratio ratio-16x9">
+                <iframe id="frame-watch" class="rounded" src="https://www.youtube.com/embed/{{viewVideo.link}}" title="Video" allowfullscreen></iframe>
+            </div>
+            <h5 class="mt-3">{{viewVideo.name}}</h5>
+            {{!-- <p>Alpenliebe Viet Nam • 291K lượt xem • 3 ngày trước</p> --}}
+
+            <!-- Action buttons -->
+            <div class="d-flex justify-content-start">
+                <button type="button" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-hand-thumbs-up"></i> Thích
+                </button>
+                <button type="button" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-hand-thumbs-down"></i> Không thích
+                </button>
+                <button type="button" class="btn btn-outline-success me-2">
+                    <i class="bi bi-share"></i> Chia sẻ
+                </button>
+                <button type="button" class="btn btn-outline-dark">
+                    <i class="bi bi-download"></i> Tải xuống
+                </button>
+            </div>
+        </div>
+
+        <!-- Video Suggestions Section -->
+        <div class="col-md-4">
+            <h5 class="mb-3">Video liên quan</h5>
+            <ul class="list-group" id="ref-video">
+                {{#each video}}
+                <li class="list-group-item d-flex bg-secondary" data-id="{{this.link}}" >
+                    <img src="https://img.youtube.com/vi/{{this.link}}/default.jpg" class="me-3" alt="thumbnail">
+                    <div>
+                        <h6>{{this.name}}</h6>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('ref-video').addEventListener('click', function (event) {
+            var targetElement = event.target;
+            var parentElement = targetElement.closest('[data-id]');
+            videoID = parentElement.getAttribute('data-id');
+            document.getElementById('frame-watch').src = 'https://www.youtube.com/embed/' + videoID;
+        });
+    });
+</script>

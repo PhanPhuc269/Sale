@@ -3,6 +3,8 @@ const User = require('../app/models/User');
 const { mutipleMongooseToObject } = require('../util/mongoose');
 const { mongooseToObject } = require('../util/mongoose');
 
+
+
 module.exports={
     sum: (a, b) => a + b,
     sortable: (field, sort) => {
@@ -50,5 +52,10 @@ module.exports={
 
       return false;
     },
-    
+    formatDuration:(seconds) => {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const remainingSeconds = seconds % 60;
+            return `${hours}h ${minutes}m ${remainingSeconds}s`;
+        },
 }

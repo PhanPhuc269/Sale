@@ -1,10 +1,16 @@
-<nav class="navbar fixed-top navbar-expand bg-dark text-white" data-bs-theme="dark">
+<nav class="navbar navbar-expand bg-dark text-white" data-bs-theme="dark">
     <div class="container-fluid ">
         <a class="navbar-brand" href="/me/home">Demure</a>
-        <form class="d-flex m-auto" role="search">
+        <div class="collapse navbar-collapse" id="mynavbar">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Giới thiệu</a>
+                </li>
+            </ul>
+        {{!-- <form class="d-flex m-auto" role="search">
             <input class="form-control me-2" id="search-input" type="text" name="q" placeholder="Search" aria-label="Search">
             <button class="btn btn-primary" type="submit">Search</button>
-        </form>
+        </form> --}}
         {{!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -31,7 +37,7 @@
                         <i class="fa-regular fa-comment-dots"></i>
                         Chat
                     </button>
-                    Phan Phúc
+                    {{name}}
                 </a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="/courses/create">Đăng khóa học</a></li>
@@ -39,7 +45,7 @@
                         <hr class="dropdown-divider">
                     </li>
                     <li><a class="dropdown-item" href="/me/stored/courses">Khóa học của tôi</a></li>
-                    <li><a class="dropdown-item" href="/me/stored/news">Bài viết của tôi</a></li>
+                    <li><a class="dropdown-item" href="/me/stored/news">Danh sách bài viết</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>

@@ -1,47 +1,5 @@
-<div class="mt-4">
-    <h1 class="text-center text-grt mb-5">Chào mừng đến với Hệ Thống Quản Lý Khóa Học</h1>
-    
-    <div class="row">
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-journal-plus fs-1 text-primary mb-3"></i>
-                    <h5 class="card-title">Đăng khóa học</h5>
-                    <p class="card-text">Giảng viên có thể dễ dàng đăng và quản lý các khóa học của mình.</p>
-                </div>
-            </div>
-        </div>
-    
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-book fs-1 text-success mb-3"></i>
-                    <h5 class="card-title">Khóa học của tôi</h5>
-                    <p class="card-text">Học viên có thể xem và truy cập vào các khóa học đã đăng ký.</p>
-                </div>
-            </div>
-        </div>
-    
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-file-earmark-text fs-1 text-info mb-3"></i>
-                    <h5 class="card-title">Bài viết của tôi</h5>
-                    <p class="card-text">Người dùng có thể tạo và quản lý các bài viết liên quan đến khóa học.</p>
-                </div>
-            </div>
-        </div>
-    
-        <div class="col-md-6 col-lg-3 mb-4">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-box-arrow-right fs-1 text-danger mb-3"></i>
-                    <h5 class="card-title">Đăng xuất</h5>
-                    <p class="card-text">Đảm bảo an toàn tài khoản bằng cách đăng xuất sau khi sử dụng.</p>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="container mt-4">
+    <h2 class="text-grt mb-3">Danh sách khóa học</h2>
     <div class="row">
         {{#each courses}}
         <div class="col-md-6 col-lg-3 mb-4 mt-4">
@@ -55,7 +13,7 @@
                     <a href="/courses/{{this.slug}}">
                     <h5 class="card-title ">{{this.name}}</h5></a>
                     <p class="card-text">{{this.description}}</p>
-                    <a href="#" class="btn btn-primary">Học ngay</a>
+                    <a href="/courses/{{this.slug}}" class="btn btn-primary">Học ngay</a>
                 </div>
             </div>
         </div>

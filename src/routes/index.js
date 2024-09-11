@@ -14,10 +14,10 @@ function requireLogin(req, res, next) {
 }
 function router(app)
 {
+    app.use('/', siteRouter)
     app.use('/news',requireLogin, newRouter);
     app.use('/me',requireLogin,  meRouter)
     app.use('/courses',requireLogin,  coursesRouter)
-    app.use('/', siteRouter)
 
     // app.get('/search', function (req, res) {
     //     res.render('search');

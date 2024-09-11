@@ -52,8 +52,10 @@ app.use(express.urlencoded({
 app.use(express.json())
 app.use(methodOverride('_method'));
 app.use(morgan('combined'));
+
 app.use(sortMidleware);
 app.use(friendsMiddleware);
+
 app.use((req, res, next) => {
   res.locals.userId = req.session.userId;
   next();
