@@ -133,7 +133,7 @@ class MeController{
 
             formData.user = req.session.userId;
             const user = await User.findById(req.session.userId);
-            formData.name = mongooseToObject(user).username;
+            formData.name = mongooseToObject(user).name;
             const post = new Post(formData);
 
             try {

@@ -43,11 +43,17 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        var videoID = document.getElementById('frame-watch').src.split('/')[4];
+        document.getElementById('ref-video').querySelector(`[data-id="${videoID}"]`).classList.add('select')
         document.getElementById('ref-video').addEventListener('click', function (event) {
             var targetElement = event.target;
             var parentElement = targetElement.closest('[data-id]');
+            document.getElementById('ref-video').querySelector('.select').classList.remove('select');
             videoID = parentElement.getAttribute('data-id');
             document.getElementById('frame-watch').src = 'https://www.youtube.com/embed/' + videoID;
+            videoID=document.getElementById('frame-watch').src.split('/')[4];
+            document.getElementById('ref-video').querySelector(`[data-id="${videoID}"]`).classList.add('select');
         });
+        
     });
 </script>
