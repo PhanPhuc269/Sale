@@ -1,0 +1,36 @@
+<div class="row text-white bg-dark rounded" style="min-height: 600px;">
+    <div class="col-md-4">
+        <h3>Select a document:</h3>
+        <ul class="list-group" id="documentList">
+            {{#each documents}}
+            <li class="list-group-item d-flex justify-content-between align-items-center"
+                onclick="loadDocument('{{this.embedUrl}}')">{{this.name}}</li>
+            {{/each}}
+{{!-- 
+            <li class="list-group-item"
+                onclick="loadDocument('https://onedrive.live.com/embed?cid=ABC1234567890ABC&resid=ABC1234567890ABC!123&authkey=!AIxyz1234')">
+                Document 3 (OneDrive)</li> --}}
+            
+        </ul>
+    </div>
+
+    <div class="col-md-8">
+        <!-- Document viewer section -->
+        <div class="ratio ratio-16x9">
+            <iframe id="documentViewer" src="{{currentView}}" frameborder="0" height="600px" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    function loadDocument(link) {
+        try {
+        const viewer = document.getElementById('documentViewer');
+        viewer.src = link;
+        }
+        catch (error) {
+            alert("Unsupported document type.");
+        }
+    }
+</script>

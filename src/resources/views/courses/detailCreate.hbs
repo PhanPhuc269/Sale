@@ -1,0 +1,198 @@
+<div class="container mt-5 bg-dark rounded text-white" >
+    <h2>Thêm nội dung khóa học: {{course.name}}</h2>
+    
+    <!-- Video Links Section -->
+    <div id="video-section" class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4>Video</h4>
+            <button class="btn btn-outline-primary" type="button" id="add-video">+</button>
+        </div>
+        {{#each video}}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" value="{{this.name}}" readonly>
+            <button class="btn btn-outline-success" type="button" onclick="previewItem('{{this.link}}')">Xem trước</button>
+            <button class="btn btn-outline-warning" type="button" onclick="editItem('{{this._id}}',this, '{{this.name}}', '{{this.link}}')">Sửa</button>
+            <button class="btn btn-outline-danger" type="button" onclick="removeInput('{{this._id}}',this)">Xóa</button>
+        </div>
+        {{/each}}
+    </div>
+    
+    <!-- Document Links Section -->
+    <div id="document-section" class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h4>Tài Liệu</h4>
+            <button class="btn btn-outline-primary" type="button" id="add-document">+</button>
+        </div>
+        {{#each document}}
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" value="{{this.name}}" readonly>
+            <button class="btn btn-outline-success" type="button" onclick="previewItem('{{this.link}}')">Xem trước</button>
+            <button class="btn btn-outline-warning" type="button"
+                onclick="editItem('{{this._id}}',this, '{{this.name}}', '{{this.link}}')" data-id="{{this._id}}">Sửa</button>
+            <button class="btn btn-outline-danger" type="button" onclick="removeInput('{{this._id}}',this)">Xóa</button>
+        </div>
+        {{/each}}
+    </div>
+    </div>
+    
+    <!-- Modal for adding video or document -->
+    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addModalLabel">Thêm Mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="item-name" class="form-label">Tên</label>
+                        <input type="text" class="form-control" id="item-name" placeholder="Nhập tên">
+                    </div>
+                    <div class="mb-3">
+                        <label for="item-link" class="form-label">Link</label>
+                        <input type="text" class="form-control" id="item-link" placeholder="Nhập link">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-item" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="save-item">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSection = '';
+
+    document.getElementById('add-video').addEventListener('click', function () {
+        currentSection = 'video-section';
+        document.getElementById('addModalLabel').textContent = 'Thêm Video';
+        document.getElementById('item-name').value = ''; 
+        document.getElementById('item-link').value = '';
+        document.getElementById('item-link').setAttribute('data-id', '');
+        new bootstrap.Modal(document.getElementById('addModal')).show();
+    });
+
+    document.getElementById('add-document').addEventListener('click', function () {
+        currentSection = 'document-section';
+        document.getElementById('addModalLabel').textContent = 'Thêm Tài Liệu';
+        document.getElementById('item-name').value = '';
+        document.getElementById('item-link').value = '';
+        document.getElementById('item-link').setAttribute('data-id', '');
+        new bootstrap.Modal(document.getElementById('addModal')).show();
+    });
+
+
+
+    // Function to remove an input field
+    function removeInput(_id, button) {
+        button.parentElement.remove();
+        fetch('delete-detail', {
+            method: 'Delete',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ _id: _id }),
+        }).then(response => response.text())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
+    // Function to preview item
+    function previewItem(link) {
+        window.open(link, '_blank');
+    }
+
+    // Function to edit item
+    function editItem(_id, button, name, link) {
+        currentSection = button.parentElement.parentElement.id;
+        document.getElementById('item-name').value = name;
+        document.getElementById('item-link').value = link;
+        document.getElementById('item-link').setAttribute('data-id' , _id);
+        const itemRow = button.parentElement;
+        itemRow.remove();
+
+        new bootstrap.Modal(document.getElementById('addModal')).show();
+    }
+    document.getElementById('save-item').addEventListener('click', function () {
+            const name = document.getElementById('item-name').value;
+            const link = document.getElementById('item-link').value; 
+            const _id = document.getElementById('item-link').getAttribute('data-id');
+            if (name && link) {
+                const itemRow = document.createElement('div');
+                itemRow.className = 'input-group mb-3';
+                itemRow.innerHTML = `
+            <input type="text" class="form-control" value="${name}" readonly>
+            <button class="btn btn-outline-success" type="button" onclick="previewItem('${link}')">Xem trước</button>
+            <button class="btn btn-outline-warning" type="button" onclick="editItem('${_id}',this, '${name}', '${link}')">Sửa</button>
+            <button class="btn btn-outline-danger" type="button" onclick="removeInput('${_id}',this)">Xóa</button>
+        `;
+                document.getElementById(currentSection).appendChild(itemRow);
+
+                // Lưu dữ liệu vào server
+                if (!_id) {
+                    saveDataToServer(null, name, link);
+                } else {
+                    saveDataToServer(_id, name, link);
+                }
+
+                // Close the modal
+                bootstrap.Modal.getInstance(document.getElementById('addModal')).hide();
+            }
+        });
+    document.getElementById('cancel-item').addEventListener('click', function () {
+            name = document.getElementById('item-name').value;
+            link = document.getElementById('item-link').value;
+            _id = document.getElementById('item-link').getAttribute('data-id');
+            if (name && link) {
+                const itemRow = document.createElement('div');
+                itemRow.className = 'input-group mb-3';
+                itemRow.innerHTML = `
+                <input type="text" class="form-control" value="${name}" readonly>
+                <button class="btn btn-outline-success" type="button" onclick="previewItem('${link}')">Xem trước</button>
+                <button class="btn btn-outline-warning" type="button" onclick="editItem('${_id}',this, '${name}', '${link}')">Sửa</button>
+                <button class="btn btn-outline-danger" type="button" onclick="removeInput('${_id}',this)">Xóa</button>
+            `;
+                document.getElementById(currentSection).appendChild(itemRow);
+
+                // Close the modal
+                bootstrap.Modal.getInstance(document.getElementById('addModal')).hide();
+            }
+        });
+
+
+    function saveDataToServer(_id, name, link) {
+            const section = currentSection === 'video-section' ? 'video' : 'document';
+
+            const payload = {
+                type: section,
+                name: name,
+                link: link,
+                slug: '{{course.slug}}',
+            };
+
+            if (_id) {
+                payload._id = _id; // Chỉ thêm _id khi cập nhật
+            }
+
+            fetch('add-detail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            }).then(response => response.text())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+    }
+
+</script>

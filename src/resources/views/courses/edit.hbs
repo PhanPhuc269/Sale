@@ -1,0 +1,29 @@
+<div class="mt-4">
+    <div class="form-group text-white">
+        <h1>Sửa khóa học</h1>
+        <form method="POST" action="/courses/{{course._id}}?_method=PUT" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên khóa học</label>
+                <input type="text" class="form-control" value="{{course.name}}" id="name" name="name" aria-describedby="nameHelp">
+                <div id="nameHelp" class="form-text">Name of the course</div>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control"  id="description" name="description" rows="3">{{course.description}}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image</label>
+                <img src="{{course.image}}" alt="Current Image" class="img-thumbnail mb-2" style="max-width: 200px;">
+                <input class="form-control" value="{{course.image}}" type="file" id="formFile" name="image" accept="image/*">
+                <div id="imageHelp" class="form-text">URL of the image</div>
+            </div>
+            <div class="mb-3">
+                <label for="videoid" class="form-label">Video ID</label>
+                <input type="text" class="form-control" value="{{course.videoid}}" id="videoid" name="videoid" aria-describedby="videoidHelp">
+                <div id="videoidHelp" class="form-text">ID of the video</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu lại</button>
+            <a href="view-add-detail" class="btn btn-primary">Sửa nội dung</a>
+        </form>
+    </div>
+</div>

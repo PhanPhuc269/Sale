@@ -1,0 +1,134 @@
+<!-- Container -->
+<style>
+    .course-header {
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .course-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #212529;
+    }
+
+    .course-description {
+        font-size: 1.2rem;
+        color: #6c757d;
+    }
+
+    .course-benefits {
+        margin-top: 20px;
+    }
+
+    .course-benefits li {
+        list-style: none;
+    }
+
+    .course-benefits li::before {
+        content: '✔';
+        color: orange;
+        margin-right: 10px;
+    }
+
+    .course-info {
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .course-info h3 {
+        color: #f03c02;
+        font-weight: bold;
+    }
+
+    .course-info button {
+        border-radius: 50px;
+    }
+
+    .list-group-item {
+        background-color: #fff;
+        border: 1px solid #dee2e6;
+        margin-bottom: 10px;
+        border-radius: 8px;
+    }
+
+    .expand {
+        color: red;
+        cursor: pointer;
+    }
+</style>
+<div class="container mt-5">
+    <!-- Row: Course Header (Left: Intro + Benefits, Right: Video and Pricing) -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="course-header">
+                <h1 class="course-title">{{course.name}}</h1>
+                <p class="course-description">{{course.description}}</p>
+                <ul class="course-benefits">
+                    <li>Các kiến thức cơ bản, nền móng của ngành IT</li>
+                    <li>Các mô hình, kiến trúc cơ bản khi triển khai ứng dụng</li>
+                    <li>Các khái niệm, thuật ngữ cốt lõi khi triển khai ứng dụng</li>
+                    <li>Hiểu hơn về cách internet và máy vi tính hoạt động</li>
+                </ul>
+                <h2 class="section-title">Nội dung khóa học</h2>
+                <p>{{countVideo}} bài học, {{countDocument}} tài liệu</p>
+                <h3>Video bài giảng</h3>
+                <ul class="list-group">
+                    {{#each video}}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{sum @index 1 }}. {{this.name}}</span>
+                        <button class="btn btn-outline-primary" type="button" onclick="fetchWatchData('{{this._id}}')">Học</button>
+                    </li>
+                    {{/each}}
+                    
+                </ul>
+                <h3>Tài liệu khóa học</h3>
+                <ul class="list-group">
+                    {{#each document}}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{sum @index 1 }}. {{this.name}}</span>
+                        <button class="btn btn-outline-primary" type="button" onclick="fetchViewdocument('{{this._id}}')">Xem</button>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="course-info text-center">
+                <div class="ratio ratio-16x9 mb-3">
+                    <iframe src="https://www.youtube.com/embed/{{course.videoid}}?autoplay=1&mute=1&loop=1&playlist={{course.videoid}}" title="Giới thiệu khóa học" allow="autoplay"></iframe>
+                </div>
+                <h3>Miễn phí</h3>
+                <button class="btn btn-primary w-100 mb-3">Đăng ký học</button>
+                <div class="text-start">
+                    <p><strong>Trình độ:</strong> Cơ bản</p>
+                    <p><strong>Tổng số bài học:</strong> {{countVideo}}</p>
+                    <p><strong>Thời lượng:</strong> {{formatDuration sumTime}}</p>
+                    <p><strong>Học mọi lúc, mọi nơi</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row: Course Content -->
+    <div class="row mt-4">
+        <div class="col-12">
+            
+        </div>
+    </div>
+</div>
+<script>
+    function fetchWatchData(_id) {
+        const currentUrl = window.location.origin + window.location.pathname;
+        window.location.href = `${currentUrl}/watch?watch=${_id}`;
+        }
+    function fetchViewdocument(_id) {
+            const currentUrl = window.location.origin + window.location.pathname;
+            window.location.href = `${currentUrl}/view-documents?d=${_id}`;
+        }
+</script>

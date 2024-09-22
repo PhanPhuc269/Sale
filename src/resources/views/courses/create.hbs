@@ -1,0 +1,33 @@
+<div class="mt-4 bg-black rounded">
+    <div class="form-group text-white m-4">
+        <h1>Tạo một khóa học</h1>
+        <form method="POST" action="store" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="name" class="form-label">Tên</label>
+                <input type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp">
+                <div id="nameHelp" class="form-text">Tên của khóa học</div>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Mô tả</label>
+                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Hình ảnh đại diện</label>
+                {{!-- <input type="text" class="form-control" id="image" name="image" aria-describedby="imageHelp"> --}}
+                <input class="form-control" type="file" id="formFile" name="image" accept="image/*" required>
+                <div id="imageHelp" class="form-text">file of the image</div>
+            </div>
+            <div class="mb-3">
+                <label for="videoid" class="form-label">Link video khóa học</label>
+                <input type="text" class="form-control" id="videoid" name="videoid" aria-describedby="videoidHelp">
+                <div id="videoidHelp" class="form-text">ID of the video</div>
+            </div>
+            <div class="mb-3"></div>
+                <label for="videoid" class="form-label">Link tài liệu khóa học</label>
+                <input type="text" class="form-control" id="docId" name="docId" aria-describedby="videoidHelp">
+                <div id="videoidHelp" class="form-text">ID of the video</div>
+            </div>
+            <button type="submit" class="btn btn-primary m-4">Submit</button>
+        </form>
+    </div>
+</div>

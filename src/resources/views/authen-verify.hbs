@@ -1,0 +1,13 @@
+<div class="container bg-ctn text-white">
+    <h2 class="text-center">Nhập Mã Xác Thực</h2>
+    <div class="instruction mb-4">
+        <h5>Vui lòng nhập mã xác thực 6 chữ số từ ứng dụng Authenticator của bạn.</h5>
+    </div>
+    <form id="auth-form"action="/verify" method="POST">
+        <div class="form-group">
+            <input type="text" class="form-control" id="token" maxlength="6" name="token" placeholder="Nhập mã xác thực"
+                required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block mt-4">Xác Nhận</button>
+    </form>
+</div>

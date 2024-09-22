@@ -1,0 +1,133 @@
+<div class="welcome mt-4"> 
+    <h1 class="text-center text-grt mb-5" style="text-shadow: 2px 2px 5px #212529;">Chào mừng đến với Hệ Thống Quản Lý Khóa Học</h1>
+    <div class="row">
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-journal-plus fs-1 text-primary mb-3"></i>
+                    <h5 class="card-title">Đăng khóa học</h5>
+                    <p class="card-text">Đăng tải video và tài liệu cho khóa học. Quản lí các khóa học của mình</p>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-book fs-1 text-success mb-3"></i>
+                    <h5 class="card-title">Khóa học của tôi</h5>
+                    <p class="card-text">Học viên có thể xem và truy cập vào các khóa học đã đăng ký.</p>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-file-earmark-text fs-1 text-info mb-3"></i>
+                    <h5 class="card-title">Bài viết của tôi</h5>
+                    <p class="card-text">Người dùng có thể tạo các bài viết đương tải hình ảnh cũng như video.</p>
+                </div>
+            </div>
+        </div>
+    
+        <div class="col-md-6 col-lg-3 mb-4">
+            <div class="card h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-box-arrow-right fs-1 text-danger mb-3"></i>
+                    <h5 class="card-title">Yêu cầu giúp đỡ từ cộng đồng</h5>
+                    <p class="card-text">Người học có thể hỏi các học viên khác hoặc giảng viên.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="loginModalLabel">Đăng nhập</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm" method="POST" action="/login">
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Tên đăng nhập:</label>
+                        <input type="text" class="form-control" id="login-name" name="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="col-form-label">Mật khẩu:</label>
+                        <input type="text" class="form-control" id="password" name="password">
+                    </div>
+                </form>
+                <div id="error-message"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" class="btn btn-primary" form="loginForm">Đăng nhập</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="registerModalLabel">Đăng ký</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm" method="post" action="/register">
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Tên tài khoản:</label>
+                        <input type="text" class="form-control" id="register-name" name="name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Tên đăng nhập:</label>
+                        <input type="text" class="form-control" id="recipient-name" name="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="col-form-label">Mật khẩu:</label>
+                        <input type="text" class="form-control" id="password" name="password">
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="submit" class="btn btn-primary" form="registerForm">Đăng ký</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); // Ngăn chặn hành vi mặc định của form
+
+            const formData = new FormData(this);
+            const formObject = {};
+            formData.forEach((value, key) => {
+                formObject[key] = value;
+            });
+
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams(formObject).toString(),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Chuyển hướng hoặc xử lý đăng nhập thành công
+                //window.location.href = '/authen-verify';
+                window.location.href = '/me/home';
+            } else {
+                // Hiển thị thông báo lỗi
+                document.getElementById('error-message').innerText = result.message;
+            }
+        });
+</script>
