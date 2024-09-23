@@ -381,7 +381,6 @@ class CoursesController{
                 documents: document,
                 currentView: selectedDocument.embedUrl
             });
-            
         }
         
     }
